@@ -50,10 +50,12 @@ public class frontscene : MonoBehaviour {
 
     public void OnClickshop()
     {
+        shop.SetActive(true);
         shop.transform.SetAsLastSibling();
     }
     public void OnClickbackshop()
     {
+        shop.SetActive(false);
         shop.transform.SetAsFirstSibling();
     }
 

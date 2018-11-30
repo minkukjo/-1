@@ -8,6 +8,7 @@ public class Itemlistslot : MonoBehaviour {
     public Image icon;
     public Text itemName_text;
     public Text itemCount_text;
+    public GameObject selected_Item;
 
     public void Additem(ToyandItem _item)
     {
@@ -18,9 +19,8 @@ public class Itemlistslot : MonoBehaviour {
             if (_item.itemCount > 0)
                 itemCount_text.text = "x " + _item.itemCount.ToString();
             else
-            {
                 itemCount_text.text = "";
-            }
+            
         }
     }
 
