@@ -11,12 +11,14 @@ public class ToyandItem : MonoBehaviour {
     public int itemCount;
     public Sprite itemIcon;
     public ItemType itemType; // 장난감, 먹이
+    public int price;
 
     public enum ItemType {
           Use,
           Toy
     }
-    public ToyandItem(string _ifn,int _itemID, string _itemName,string _itemDes,ItemType _itemType , int _itemCount = 1)
+    // 
+    public ToyandItem(string _ifn,int _itemID, string _itemName,string _itemDes,ItemType _itemType, int _price, int _itemCount = 1)
     {
         imagefilename = _ifn;
         itemID = _itemID;
@@ -24,6 +26,9 @@ public class ToyandItem : MonoBehaviour {
         itemDescription = _itemDes;
         itemType = _itemType;
         itemCount = _itemCount;
+
+        price = _price;
+
         // 생성시 만약 이미지와 itemID 를 값을 다르게 선언 했다면
         // 그 파일의 이름을 String 타입의 파라미터로 받아와야됩니다.
         // ex) "고양이껌"

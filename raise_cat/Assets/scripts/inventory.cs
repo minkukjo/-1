@@ -8,7 +8,8 @@ public class inventory : MonoBehaviour {
 
 
     //private OrderManager theOrder;
-        // 캐릭터가 움직이면 안되겠죠 ?
+    // 캐릭터가 움직이면 안되겠죠 ?
+    clickTab clicktab;
 
     private Itemlistslot[] slots; // 아까전에 짠 인벤토리 슬롯 UI
 
@@ -17,8 +18,9 @@ public class inventory : MonoBehaviour {
 
     public Text Description_text; // 아이템 설명
     public string[] tabDescription; // 탭 부연 설명 - 이건 아직까지 필요 없다. 
-    
 
+
+    public Transform Tabbuttonlist;
     public Transform tf; // slot 부모 객체
 
     public GameObject go; // 인벤토리 활성화 비활성화
@@ -33,6 +35,7 @@ public class inventory : MonoBehaviour {
     private bool itemActivated; // 아이템 활성화시 true
     private bool stopKeyinput; //키 입력 제한(소비할때 질의가 나올텐데 그때 키입력 방지)
     private bool preventExec;
+    private bool clickcheck;
 
     private WaitForSeconds waitTime = new WaitForSeconds(0.01f);
     
@@ -42,15 +45,22 @@ public class inventory : MonoBehaviour {
         itemList = new List<ToyandItem>();
         TabList = new List<ToyandItem>();
         slots = tf.GetComponentsInChildren<Itemlistslot>();
+        
 
-        itemList.Add(new ToyandItem("item1", 100, "장난감", "장난감들 리스트를 확인하는는 과정입니다.", ToyandItem.ItemType.Toy));
-        itemList.Add(new ToyandItem("item2", 200, "먹이", "특식(먹이) 리스트를 확인하는 과정입니다..", ToyandItem.ItemType.Use));
-
-
-        itemList.Add(new ToyandItem("item1", 100, "고양이풀", "고양이들이 너무너무 좋아하는 고양이 푸울 ~", ToyandItem.ItemType.Toy));
-        itemList.Add(new ToyandItem("item2", 200, "참치", "냥이 친구들 끼리 먹다가 없어져도 모를만큼 맛있는 참치캔 ~", ToyandItem.ItemType.Use));
+        itemList.Add(new ToyandItem("item1", 100, "장난감", "장난감들 리스트를 확인하는는 과정입니다.", ToyandItem.ItemType.Toy, 10000));
+        itemList.Add(new ToyandItem("item2", 200, "먹이", "특식(먹이) 리스트를 확인하는 과정입니다..", ToyandItem.ItemType.Use, 15000));
 
 
+        itemList.Add(new ToyandItem("item1", 100, "고양이풀", "고양이들이 너무너무 좋아하는 고양이 푸울 ~", ToyandItem.ItemType.Toy, 20000));
+        itemList.Add(new ToyandItem("item2", 200, "참치", "냥이 친구들 끼리 먹다가 없어져도 모를만큼 맛있는 참치캔 ~", ToyandItem.ItemType.Use, 25000));
+
+        activated = true;
+        go.SetActive(true);
+        selectedtab = 0;
+        tabActivated = true;
+        itemActivated = false;
+        clickcheck = true;
+        ShowTab();
     }
 
     public void RemoveSlot()
@@ -85,6 +95,9 @@ public class inventory : MonoBehaviour {
         while (tabActivated)
         {
             Color color = selectedTabImages[0].GetComponent<Image>().color;
+            color.a = 0.5f;
+            selectedTabImages[selectedtab].GetComponent<Image>().color = color;
+            /*
             while(color.a < 0.5f){
                 color.a += 0.03f;
                 selectedTabImages[selectedtab].GetComponent<Image>().color = color;
@@ -96,7 +109,7 @@ public class inventory : MonoBehaviour {
                 selectedTabImages[selectedtab].GetComponent<Image>().color = color;
                 yield return waitTime;
             }
-
+            */
             yield return new WaitForSeconds(0.3f);
         }
     } // 선택된 탭 반짝임 효과
@@ -180,65 +193,55 @@ public class inventory : MonoBehaviour {
         
         if (!stopKeyinput)
         {
-            // 클릭하면 반짝반짝
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                activated = !activated;
+            
 
-                if (activated)
-                {
-                    go.SetActive(true);
-                    selectedtab = 0;
-                    tabActivated = true;
-                    itemActivated = false;
-                    ShowTab();
-                }
-                else
-                {
-                    StopAllCoroutines();
-                    go.SetActive(false);
-                    tabActivated = false;
-                    itemActivated = false;
-                }
-            }
-            // 탭을 방향키로 이동
+            // 탭을 마우스로 이동
             if (activated)
             {
                 if (tabActivated)
                 {
-                    // 좌,우 방향키 누르면 탭이 이동
-                    if (Input.GetKeyDown(KeyCode.RightArrow))
+                    
+                    
+                    int tabindex = Tabbuttonlist.GetComponent<clickTab>().Tabbuttonindex;
+                    if (tabindex == 0)
                     {
-                        if (selectedtab < selectedTabImages.Length - 1)
-                            selectedtab++;
-                        else
+                        if (clickcheck) {
+                            Debug.Log("Toy_tab tab");
                             selectedtab = 0;
-                        SelectedTab();
+                            SelectedTab();
+                            clickcheck = false;
+                            // 아예 아이템창 선택
+                            //아이템창 활성화
+                            itemActivated = true;
+                            tabActivated = true;
+                            preventExec = true;
+                            //clickcheck = true;
+                            Showitem();
+                        }
                     }
-                    else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                    else if (tabindex == 1)
                     {
-                        if (selectedtab > 0)
-                            selectedtab--;
-                        else
-                            selectedtab = selectedTabImages.Length - 1;
-                        SelectedTab();
+                        if (!clickcheck)
+                        {
+                            Debug.Log("food_tab tab");
+                            selectedtab = 1;
+                            SelectedTab();
+                            clickcheck = true;
+                            // 아예 아이템창 선택
+                            //아이템창 활성화
+                            itemActivated = true;
+                            tabActivated = true;
+                            preventExec = true;
+                            //clickcheck = true;
+                            Showitem();
+                        }
                     }
-                    // 선택하면 각 탭의 아이템들이 나오는 것
-                    else if (Input.GetKeyDown(KeyCode.Z))
-                    {
-                        // 아예 아이템창 선택
-                        Color color = selectedTabImages[selectedtab].GetComponent<Image>().color;
-                        color.a = 0.25f;
-                        selectedTabImages[selectedtab].GetComponent<Image>().color = color;
-                        //아이템창 활성화
-                        itemActivated = true;
-                        tabActivated = false;
-                        preventExec = true;
-                        Showitem();
-                    }
+                    
+                        
+                    
                 } // 탭활성화시 키입력 처리
 
-                else if (itemActivated)
+                if (itemActivated)
                 {
                     if (Input.GetKeyDown(KeyCode.DownArrow))
                     {
@@ -305,3 +308,61 @@ public class inventory : MonoBehaviour {
 
 	
 }
+
+
+/*
+            // 클릭하면 반짝반짝
+            //if(  )
+        
+             if (Input.GetKeyDown(KeyCode.I))
+           {
+                activated = !activated;
+            
+                if (activated)
+                {
+                    Debug.Log("i click");
+                    go.SetActive(true);
+                    selectedtab = 0;
+                    tabActivated = true;
+                    itemActivated = false;
+                    clickcheck = true;
+                    ShowTab();
+                }
+                else
+                {
+                    StopAllCoroutines();
+                    go.SetActive(false);
+                    tabActivated = false;
+                    itemActivated = false;
+                    clickcheck = false;
+                }
+          }
+             */
+
+
+
+
+
+
+
+/*
+                    좌,우 방향키 누르면 탭이 이동
+                    if (Input.GetKeyDown(KeyCode.RightArrow))
+                    {
+                        if (selectedtab < selectedTabImages.Length - 1)
+                            selectedtab++;
+                        else
+                            selectedtab = 0;
+                        SelectedTab();
+                    }
+                    else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                    {
+                        if (selectedtab > 0)
+                            selectedtab--;
+                        else
+                            selectedtab = selectedTabImages.Length - 1;
+                        SelectedTab();
+                    }
+                    
+                    선택하면 각 탭의 아이템들이 나오는 것
+                    */

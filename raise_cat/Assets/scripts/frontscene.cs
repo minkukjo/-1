@@ -55,7 +55,9 @@ public class frontscene : MonoBehaviour {
     }
     public void OnClickbackshop()
     {
-        shop.SetActive(false);
+        //StopAllCoroutines();
+        //shop.SetActive(false);
+
         shop.transform.SetAsFirstSibling();
     }
 
