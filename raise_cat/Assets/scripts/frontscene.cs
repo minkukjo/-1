@@ -14,10 +14,14 @@ public class frontscene : MonoBehaviour {
     public GameObject R;
     public GameObject C;
     public GameObject Cat_Box;
-    public GameObject Circle_set;   
+    public GameObject Circle_set;
+    public GameObject sound_out;
+    public AudioSource source_audio;
+    public AudioClip audioclip;
     
     // Use this for initialization
     void Start () {
+        source_audio = sound_out.GetComponent<AudioSource>();
         walking = GameObject.Find("walking");
         shop = GameObject.Find("shoping");
         sleep = GameObject.Find("sleeping");
@@ -35,6 +39,8 @@ public class frontscene : MonoBehaviour {
 
     public void OnClickTouch()
     {
+        source_audio.clip = audioclip;
+        source_audio.Play();
         if(Circle_set.activeSelf)
         {
             Circle_set.SetActive(false);
@@ -46,12 +52,16 @@ public class frontscene : MonoBehaviour {
     }
     public void OnClickR()
     {
+        source_audio.clip = audioclip;
+        source_audio.Play();
         Cat_Box.SetActive(false);
         Circle_set.SetActive(false);
         R.transform.SetAsLastSibling();
     }
     public void OnClickC()
     {
+        source_audio.clip = audioclip;
+        source_audio.Play();
         Cat_Box.SetActive(true);
         Circle_set.SetActive(false);
         C.transform.SetAsLastSibling();

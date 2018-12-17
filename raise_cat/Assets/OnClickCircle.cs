@@ -25,7 +25,8 @@ public class OnClickCircle : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+            source_audio.clip = cat_sound[3];
+            source_audio.Play();
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
                 if (hit.transform.gameObject == gameObject)
