@@ -13,6 +13,8 @@ public class frontscene : MonoBehaviour {
     // 양육 & 교감 탭 선정
     public GameObject R;
     public GameObject C;
+    public GameObject Cat_Box;
+    public GameObject Circle_set;   
     
     // Use this for initialization
     void Start () {
@@ -30,12 +32,28 @@ public class frontscene : MonoBehaviour {
 	void Update () {
        
 	}
+
+    public void OnClickTouch()
+    {
+        if(Circle_set.activeSelf)
+        {
+            Circle_set.SetActive(false);
+        }
+        else
+        {
+            Circle_set.SetActive(true);
+        }
+    }
     public void OnClickR()
     {
+        Cat_Box.SetActive(false);
+        Circle_set.SetActive(false);
         R.transform.SetAsLastSibling();
     }
     public void OnClickC()
     {
+        Cat_Box.SetActive(true);
+        Circle_set.SetActive(false);
         C.transform.SetAsLastSibling();
     }
     
